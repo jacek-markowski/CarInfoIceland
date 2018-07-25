@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun afterTextChanged(p0: Editable?) {
-                val brand = getBrandName(p0)
+                val brand = BrandLogo.getBrandName(p0)
                 val source = "http://www.carlogos.org/logo/$brand-logo.png"
                 BrandLogo.displayImage(this@MainActivity, source, img_brand)
 
@@ -63,16 +63,5 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun getBrandName(p0: Editable?): String {
-        val split = p0?.split(" - ") ?: List(1, { "" })
-        val brandWords = split[0].replace("-", " ")
-        val splitWords = brandWords.split(" ")
-        var brand = ""
-        splitWords.forEach({ it -> brand += "-${it.toLowerCase().capitalize()}" })
-        brand = brand.substring(1)
-        if (brand.length <= 3) { // BMW
-            brand = brand.toUpperCase()
-        }
-        return brand
-    }
+
 }

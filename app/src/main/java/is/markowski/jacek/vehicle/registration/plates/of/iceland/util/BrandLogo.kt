@@ -23,6 +23,7 @@
 package `is`.markowski.jacek.vehicle.registration.plates.of.iceland.util
 
 import android.content.Context
+import android.text.Editable
 import android.widget.ImageView
 
 object BrandLogo {
@@ -32,5 +33,18 @@ object BrandLogo {
                 .load(source)
                 .fitCenter()
                 .into(destination)
+    }
+
+    fun getBrandName(p0: Editable?): String {
+        val split = p0?.split(" - ") ?: List(1, { "" })
+        val brandWords = split[0].replace("-", " ")
+        val splitWords = brandWords.split(" ")
+        var brand = ""
+        splitWords.forEach({ it -> brand += "-${it.toLowerCase().capitalize()}" })
+        brand = brand.substring(1)
+        if (brand.length <= 3) { // BMW
+            brand = brand.toUpperCase()
+        }
+        return brand
     }
 }
