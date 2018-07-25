@@ -20,9 +20,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        supportActionBar!!.hide()
         setContentView(R.layout.activity_main)
-        bt_search.isEnabled = true
-        bt_search.setOnClickListener { v ->
+        ibt_search.isEnabled = true
+        ibt_search.setOnClickListener { v ->
             val plateNumber: String = ed_search_number.text.toString()
             Thread.sleep(100)
             Query.query(this,
