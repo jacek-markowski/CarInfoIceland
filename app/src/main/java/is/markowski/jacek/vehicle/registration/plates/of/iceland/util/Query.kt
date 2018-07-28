@@ -24,13 +24,17 @@ package `is`.markowski.jacek.vehicle.registration.plates.of.iceland.util
 
 import android.content.Context
 import android.os.AsyncTask
+import android.test.mock.MockContext
+import android.view.View
+import android.view.View.INVISIBLE
+import android.view.View.VISIBLE
+import android.widget.ImageButton
+import android.widget.ProgressBar
 import android.widget.TextView
-import org.json.JSONObject
-import java.io.BufferedReader
-import java.io.InputStreamReader
+import org.jsoup.Jsoup
+import org.jsoup.select.Elements
 import java.io.UnsupportedEncodingException
 import java.lang.ref.WeakReference
-import java.net.URL
 import java.net.URLEncoder
 
 
@@ -46,9 +50,12 @@ object Query {
               tvEmission: TextView,
               tvWeight: TextView,
               tvStatus: TextView,
-              tvNextInspection: TextView) {
+              tvNextInspection: TextView,
+              progressBar: ProgressBar,
+              btSearch: ImageButton) {
         if (Connection.isConnected(context)) {
-            QueryTask(tvBrand, tvRegistration, tvAlias, tvVin, tvRegisteredAt, tvEmission, tvWeight, tvStatus, tvNextInspection).execute(plate)
+            QueryTask(tvBrand, tvRegistration, tvAlias, tvVin, tvRegisteredAt, tvEmission, tvWeight, tvStatus, tvNextInspection,
+                    progressBar, btSearch).execute(plate)
         } else {
             Connection.toastNoConnection(context)
         }
@@ -63,7 +70,9 @@ object Query {
             tvEmission: TextView,
             tvWeight: TextView,
             tvStatus: TextView,
-            tvNextInspection: TextView) : AsyncTask<String, Int, JSONObject>() {
+            tvNextInspection: TextView,
+            progressBar: ProgressBar,
+            btSearch: ImageButton) : AsyncTask<String, Int, Elements>() {
         internal var tvBrand: WeakReference<TextView> = WeakReference(tvBrand)
         internal var tvRegistration: WeakReference<TextView> = WeakReference(tvRegistration)
         internal var tvAlias: WeakReference<TextView> = WeakReference(tvAlias)
@@ -73,29 +82,32 @@ object Query {
         internal var tvWeight: WeakReference<TextView> = WeakReference(tvWeight)
         internal var tvStatus: WeakReference<TextView> = WeakReference(tvStatus)
         internal var tvNextInspection: WeakReference<TextView> = WeakReference(tvNextInspection)
+        internal var progressBar: WeakReference<ProgressBar> = WeakReference(progressBar)
+        internal var btSearch: WeakReference<ImageButton> = WeakReference(btSearch)
 
 
-        private val s = "..."
-
-        override fun onPostExecute(jsonCarInfo: JSONObject) {
-            super.onPostExecute(jsonCarInfo)
+        override fun onPostExecute(elems: Elements) {
+            super.onPostExecute(elems)
             try {
-                tvBrand.get()!!.text = jsonCarInfo.optString("type", "Not found.")
-                tvRegistration.get()!!.text = jsonCarInfo.optString("number", s)
-                tvAlias.get()!!.text = jsonCarInfo.optString("registryNumber", s)
-                tvVin.get()!!.text = jsonCarInfo.optString("factoryNumber", s)
-                tvRegisteredAt.get()!!.text = jsonCarInfo.optString("registeredAt", s)
-                tvEmission.get()!!.text = jsonCarInfo.optString("pollution", s)
-                tvWeight.get()!!.text = jsonCarInfo.optString("weight", s)
-                tvStatus.get()!!.text = jsonCarInfo.optString("status", s)
-                tvNextInspection.get()!!.text = jsonCarInfo.optString("nextCheck", s)
+                tvBrand.get()!!.text = elems[0].text()
+                tvRegistration.get()!!.text = elems[2].text()
+                tvAlias.get()!!.text = elems[1].text()
+                tvVin.get()!!.text = elems[3].text()
+                tvRegisteredAt.get()!!.text = elems[4].text()
+                tvEmission.get()!!.text = elems[5].text()
+                tvWeight.get()!!.text = elems[6].text()
+                tvStatus.get()!!.text = elems[7].text()
+                tvNextInspection.get()!!.text = elems[8].text()
             } catch (e: Exception) {
                 e.printStackTrace()
+                tvBrand.get()!!.text = "Not Found."
             }
+            (btSearch.get() ?: View(MockContext())).visibility = VISIBLE
+            (progressBar.get() ?: View(MockContext())).visibility = INVISIBLE
 
         }
 
-        override fun doInBackground(vararg params: String): JSONObject {
+        override fun doInBackground(vararg params: String): Elements {
 
             publishProgress(1)
             var plate = ""
@@ -105,35 +117,20 @@ object Query {
                 e.printStackTrace()
             }
 
-
-            val fullUrl = "http://apis.is/car?number=$plate"
-
-            var url: URL? = null
-            try {
-                url = URL(fullUrl)
+            val fullUrl = "https://www.samgongustofa.is/umferd/okutaeki/okutaekjaskra/uppfletting?vq=$plate"
+            return try {
+                val doc = Jsoup.connect(fullUrl).get()
+                doc.select("div.boxbody span")
             } catch (e: Exception) {
-                e.printStackTrace()
+                Elements()
             }
 
-            var jsonCarInfo: JSONObject? = null
+        }
 
-            try {
-                val cc = url!!.openConnection()
-                cc.connectTimeout = 500
-                val br = BufferedReader(InputStreamReader(cc.getInputStream()))
-                jsonCarInfo = JSONObject(br.readLine())
-                br.close()
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-
-            try {
-                return jsonCarInfo!!.getJSONArray("results").getJSONObject(0)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-
-            return JSONObject()
+        override fun onProgressUpdate(vararg values: Int?) {
+            super.onProgressUpdate(*values)
+            (btSearch.get() ?: View(MockContext())).visibility = INVISIBLE
+            (progressBar.get() ?: View(MockContext())).visibility = VISIBLE
         }
     }
 }

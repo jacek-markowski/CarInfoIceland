@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">CarInfo: Iceland</string>
+    <string name="empty_text">...</string>
+    <string name="not_found">Not Found.</string>
 </resources>

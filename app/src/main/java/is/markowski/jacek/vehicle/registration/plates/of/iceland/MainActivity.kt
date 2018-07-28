@@ -14,6 +14,8 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import android.widget.Toast.LENGTH_LONG
 import kotlinx.android.synthetic.main.activity_main.*
+import android.content.Intent
+import android.net.Uri
 
 
 class MainActivity : AppCompatActivity() {
@@ -26,6 +28,15 @@ class MainActivity : AppCompatActivity() {
         ibt_search.setOnClickListener { v ->
             val plateNumber: String = ed_search_number.text.toString()
             Thread.sleep(100)
+            tv_brand_name.text = ""
+            tv_registration_number.text = ""
+            tv_alias.text = ""
+            tv_vin.text = ""
+            tv_first_registered.text = ""
+            tv_emmision.text = ""
+            tv_weight.text = ""
+            tv_status.text = ""
+            tv_next_inspection.text = ""
             Query.query(this,
                     plateNumber,
                     tv_brand_name,
@@ -36,7 +47,9 @@ class MainActivity : AppCompatActivity() {
                     tv_emmision,
                     tv_weight,
                     tv_status,
-                    tv_next_inspection)
+                    tv_next_inspection,
+                    progressBar,
+                    ibt_search)
             val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
             inputMethodManager.hideSoftInputFromWindow(v.windowToken, 0)
         }
@@ -61,6 +74,13 @@ class MainActivity : AppCompatActivity() {
             val clip = ClipData.newPlainText("vin", tv_vin.text.toString())
             clipboard.primaryClip = clip
             Toast.makeText(this@MainActivity, "VIN copied to clipboard!", LENGTH_LONG).show()
+        }
+
+        bt_samgongustofa.setOnClickListener {
+            val url = "https://www.samgongustofa.is/umferd/okutaeki/okutaekjaskra/uppfletting"
+            val i = Intent(Intent.ACTION_VIEW)
+            i.data = Uri.parse(url)
+            startActivity(i)
         }
     }
 
