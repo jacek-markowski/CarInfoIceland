@@ -112,10 +112,11 @@ object Query {
             publishProgress(1)
             var plate = ""
             try {
-                plate = URLEncoder.encode(params[0].trim { it <= ' ' }.replace("\\s", ""), "UTF-8")
+                plate = URLEncoder.encode(params[0].trim { it == ' ' }.replace("\\s", ""), "UTF-8")
             } catch (e: UnsupportedEncodingException) {
                 e.printStackTrace()
             }
+
 
             val fullUrl = "https://www.samgongustofa.is/umferd/okutaeki/okutaekjaskra/uppfletting?vq=$plate"
             return try {

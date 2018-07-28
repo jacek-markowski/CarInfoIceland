@@ -16,6 +16,8 @@ import android.widget.Toast.LENGTH_LONG
 import kotlinx.android.synthetic.main.activity_main.*
 import android.content.Intent
 import android.net.Uri
+import java.io.UnsupportedEncodingException
+import java.net.URLEncoder
 
 
 class MainActivity : AppCompatActivity() {
@@ -77,7 +79,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         bt_samgongustofa.setOnClickListener {
-            val url = "https://www.samgongustofa.is/umferd/okutaeki/okutaekjaskra/uppfletting"
+            var plate = ""
+            try {
+                plate = URLEncoder.encode(ed_search_number.text.trim { it == ' ' }.toString().replace("\\s", ""), "UTF-8")
+            } catch (e: UnsupportedEncodingException) {
+                e.printStackTrace()
+            }
+            val url = "https://www.samgongustofa.is/umferd/okutaeki/okutaekjaskra/uppfletting?vq=$plate"
             val i = Intent(Intent.ACTION_VIEW)
             i.data = Uri.parse(url)
             startActivity(i)
