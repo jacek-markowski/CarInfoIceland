@@ -22,8 +22,10 @@
 
 package `is`.markowski.jacek.vehicle.registration.plates.of.iceland.util
 
+import `is`.markowski.jacek.vehicle.registration.plates.of.iceland.MainActivity
 import android.content.Context
 import android.os.AsyncTask
+import android.support.v7.app.AppCompatActivity
 import android.test.mock.MockContext
 import android.view.View
 import android.view.View.INVISIBLE
@@ -36,6 +38,7 @@ import org.jsoup.select.Elements
 import java.io.UnsupportedEncodingException
 import java.lang.ref.WeakReference
 import java.net.URLEncoder
+import javax.net.ssl.SSLSocketFactory
 
 
 object Query {
@@ -54,7 +57,7 @@ object Query {
               progressBar: ProgressBar,
               btSearch: ImageButton) {
         if (Connection.isConnected(context)) {
-            QueryTask(tvBrand, tvRegistration, tvAlias, tvVin, tvRegisteredAt, tvEmission, tvWeight, tvStatus, tvNextInspection,
+            QueryTask(context as MainActivity, tvBrand, tvRegistration, tvAlias, tvVin, tvRegisteredAt, tvEmission, tvWeight, tvStatus, tvNextInspection,
                     progressBar, btSearch).execute(plate)
         } else {
             Connection.toastNoConnection(context)
@@ -62,6 +65,7 @@ object Query {
     }
 
     private open class QueryTask internal constructor(
+            activity: AppCompatActivity,
             tvBrand: TextView,
             tvRegistration: TextView,
             tvAlias: TextView,
@@ -73,6 +77,7 @@ object Query {
             tvNextInspection: TextView,
             progressBar: ProgressBar,
             btSearch: ImageButton) : AsyncTask<String, Int, Elements>() {
+        internal var act: WeakReference<AppCompatActivity> = WeakReference(activity)
         internal var tvBrand: WeakReference<TextView> = WeakReference(tvBrand)
         internal var tvRegistration: WeakReference<TextView> = WeakReference(tvRegistration)
         internal var tvAlias: WeakReference<TextView> = WeakReference(tvAlias)
@@ -120,7 +125,8 @@ object Query {
 
             val fullUrl = "https://www.samgongustofa.is/umferd/okutaeki/okutaekjaskra/uppfletting?vq=$plate"
             return try {
-                val doc = Jsoup.connect(fullUrl).get()
+                updateAndroidSecurityProvider(act.get()!!)
+                val doc = Jsoup.connect(fullUrl).validateTLSCertificates(false).get()
                 doc.select("div.boxbody span")
             } catch (e: Exception) {
                 Elements()

@@ -13,7 +13,7 @@ android {
         minSdkVersion 15
         targetSdkVersion 27
         versionCode 6
-        versionName "1.03"
+        versionName "1.04"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -26,14 +26,13 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation"org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     implementation 'com.github.bumptech.glide:glide:4.2.0'
     implementation 'org.jsoup:jsoup:1.11.3'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.2.0'
+    implementation 'com.google.android.gms:play-services-auth:11.8.0'
     kapt 'com.github.bumptech.glide:compiler:4.2.0'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
