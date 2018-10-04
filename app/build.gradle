@@ -12,7 +12,7 @@ android {
         applicationId "is.markowski.jacek.vehicle.registration.plates.of.iceland"
         minSdkVersion 15
         targetSdkVersion 27
-        versionCode 6
+        versionCode 7
         versionName "1.04"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
