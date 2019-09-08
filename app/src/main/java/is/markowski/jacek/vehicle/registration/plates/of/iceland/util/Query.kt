@@ -100,9 +100,9 @@ object Query {
                 tvVin.get()!!.text = elems[3].text()
                 tvRegisteredAt.get()!!.text = elems[4].text()
                 tvEmission.get()!!.text = elems[5].text()
-                tvWeight.get()!!.text = elems[6].text()
-                tvStatus.get()!!.text = elems[7].text()
-                tvNextInspection.get()!!.text = elems[8].text()
+                tvWeight.get()!!.text = elems[9].text()
+                tvStatus.get()!!.text = elems[11].text()
+                tvNextInspection.get()!!.text = elems[12].text()
             } catch (e: Exception) {
                 e.printStackTrace()
                 tvBrand.get()!!.text = "Not Found."
@@ -126,7 +126,7 @@ object Query {
             val fullUrl = "https://www.samgongustofa.is/umferd/okutaeki/okutaekjaskra/uppfletting?vq=$plate"
             return try {
                 updateAndroidSecurityProvider(act.get()!!)
-                val doc = Jsoup.connect(fullUrl).validateTLSCertificates(false).get()
+                val doc = Jsoup.connect(fullUrl).get()
                 doc.select("div.boxbody span")
             } catch (e: Exception) {
                 Elements()
