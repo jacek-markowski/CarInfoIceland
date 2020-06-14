@@ -6,16 +6,16 @@ import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import android.widget.Toast.LENGTH_LONG
+import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
-import android.content.Intent
-import android.net.Uri
 import java.io.UnsupportedEncodingException
 import java.net.URLEncoder
 
@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         ibt_search.isEnabled = true
         ibt_search.setOnClickListener { v ->
-            val plateNumber: String = ed_search_number.text.toString()
+            val plateNumber: String = ed_search_number.text.trim { it == ' ' }.toString().replace(" ", "").toLowerCase()
             Thread.sleep(100)
             tv_brand_name.text = ""
             tv_registration_number.text = ""
@@ -81,7 +81,7 @@ class MainActivity : AppCompatActivity() {
         bt_samgongustofa.setOnClickListener {
             var plate = ""
             try {
-                plate = URLEncoder.encode(ed_search_number.text.trim { it == ' ' }.toString().replace("\\s", ""), "UTF-8")
+                plate = URLEncoder.encode(ed_search_number.text.trim { it == ' ' }.toString().replace(" ", ""), "UTF-8")
             } catch (e: UnsupportedEncodingException) {
                 e.printStackTrace()
             }

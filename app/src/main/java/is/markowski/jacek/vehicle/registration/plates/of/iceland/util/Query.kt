@@ -25,7 +25,6 @@ package `is`.markowski.jacek.vehicle.registration.plates.of.iceland.util
 import `is`.markowski.jacek.vehicle.registration.plates.of.iceland.MainActivity
 import android.content.Context
 import android.os.AsyncTask
-import android.support.v7.app.AppCompatActivity
 import android.test.mock.MockContext
 import android.view.View
 import android.view.View.INVISIBLE
@@ -33,12 +32,12 @@ import android.view.View.VISIBLE
 import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import org.jsoup.Jsoup
 import org.jsoup.select.Elements
 import java.io.UnsupportedEncodingException
 import java.lang.ref.WeakReference
 import java.net.URLEncoder
-import javax.net.ssl.SSLSocketFactory
 
 
 object Query {
